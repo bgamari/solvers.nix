@@ -1,5 +1,6 @@
 { stdenv, src,
-  pkgconfig, gfortran, blas, liblapack, python, mpi,
+  cmake, pkgconfig, gfortran,
+  blas, liblapack, python3, mpi,
   metis, mumps, scotch, scalapack, sowing, hypre
 }:
 
@@ -8,14 +9,14 @@ stdenv.mkDerivation rec {
   inherit src;
 
   nativeBuildInputs = [
-    pkgconfig gfortran python
+    pkgconfig gfortran cmake
   ];
-  buildInputs = [
-    blas liblapack python mumps scalapack sowing mpi
-  ];
-  enableParallelBuilding = true;
 
-  patches = [ ./fix-petsc-configure.patch ];
+  buildInputs = [
+    blas liblapack python3 mumps scalapack sowing mpi
+  ];
+
+  enableParallelBuilding = true;
 
   preConfigure = ''
     patchShebangs .
@@ -24,6 +25,8 @@ stdenv.mkDerivation rec {
       --prefix=$out
     )
   '';
+
+  configureScript = "python3 ./configure";
 
   PETSC_ARCH = "arch-linux2-c-opt";
 

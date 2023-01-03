@@ -62,12 +62,29 @@
         "type": "github"
       }
     },
+    "petsc": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1672453414,
+        "narHash": "sha256-ycrUgy8vppnA2bY/343/ePVg+r9zpVNSz+CbRm7IJxY=",
+        "ref": "refs/heads/main",
+        "rev": "5ea10fd3dce7171800b30dfb5bb4b8ea663d7506",
+        "revCount": 85515,
+        "type": "git",
+        "url": "https://gitlab.com/petsc/petsc?tag=v3.18.3"
+      },
+      "original": {
+        "type": "git",
+        "url": "https://gitlab.com/petsc/petsc?tag=v3.18.3"
+      }
+    },
     "root": {
       "inputs": {
         "flake-utils": "flake-utils",
         "hypre": "hypre",
         "mumps": "mumps",
         "nixpkgs": "nixpkgs",
+        "petsc": "petsc",
         "slepc": "slepc",
         "sowing": "sowing"
       }

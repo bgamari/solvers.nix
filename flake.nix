@@ -5,6 +5,11 @@
 
   inputs.nixpkgs.url = "github:nixos/nixpkgs";
 
+  inputs.petsc = {
+    url = "git+https://gitlab.com/petsc/petsc?tag=v3.18.3";
+    flake = false;
+  };
+
   inputs.slepc = {
     url = "git+https://gitlab.com/slepc/slepc?tag=v3.18.1";
     flake = false;
@@ -56,6 +61,7 @@
           };
 
           petsc = pkgs.callPackage ./petsc {
+            src = inputs.petsc;
             inherit mumps sowing mpi blas hypre;
           };
 
