@@ -41,7 +41,13 @@
 
           mumps = pkgs.callPackage ./mumps {
             src = inputs.mumps;
-            inherit blas;
+            inherit mpi blas scalapack;
+          };
+
+          mumps-serial = pkgs.callPackage ./mumps {
+            src = inputs.mumps;
+            mpi = null;
+            inherit blas scalapack;
           };
 
           slepc = pkgs.callPackage ./slepc {
