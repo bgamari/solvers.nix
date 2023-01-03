@@ -61,14 +61,16 @@
 
           scalapack = pkgs.scalapack.override { inherit mpi; };
 
-          hypre = pkgs.callPackage ./hypre.nix {
+          hypre = pkgs.callPackage ./hypre {
             src = inputs.hypre;
             inherit mpi;
           };
 
           petsc = pkgs.callPackage ./petsc {
             src = inputs.petsc;
+            version = "3.18.3";
             inherit mumps sowing mpi blas hypre;
+            inherit (pkgs.python3Packages) numpy cython;
           };
 
           default = petsc;
