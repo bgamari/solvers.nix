@@ -32,49 +32,56 @@
 
   outputs = inputs@{ self, nixpkgs, flake-utils, ... }:
     flake-utils.lib.eachDefaultSystem (system:
-      let pkgs = nixpkgs.legacyPackages.${system}; in
-      {
-        packages = rec {
-          mpi = pkgs.openmpi;
+      let pkgs = nixpkgs.legacyPackages.${system};
+      in {
+        packages = 
+          let
+            mkPackages = mpi: rec {
+              inherit mpi;
 
-          blas = pkgs.openblasCompat;
+              blas = pkgs.openblasCompat;
 
-          mumps = pkgs.callPackage ./mumps {
-            src = inputs.mumps;
-            inherit mpi blas scalapack;
+              mumps = pkgs.callPackage ./mumps {
+                src = inputs.mumps;
+                inherit mpi blas scalapack;
+              };
+
+              mumps-serial = pkgs.callPackage ./mumps {
+                src = inputs.mumps;
+                mpi = null;
+                inherit blas scalapack;
+              };
+
+              slepc = pkgs.callPackage ./slepc {
+                src = inputs.slepc;
+                inherit mpi petsc blas;
+              };
+
+              sowing = pkgs.callPackage ./sowing {
+                src = inputs.sowing;
+              };
+
+              scalapack = pkgs.scalapack.override { inherit mpi; };
+
+              hypre = pkgs.callPackage ./hypre {
+                src = inputs.hypre;
+                inherit mpi;
+              };
+
+              petsc = pkgs.callPackage ./petsc {
+                src = inputs.petsc;
+                version = "3.18.3";
+                inherit mumps sowing mpi blas;
+                hypre = if mpi == null then null else hypre;
+                inherit (pkgs.python3Packages) numpy cython;
+              };
+            };
+          in rec {
+            openmpi = mkPackages pkgs.openmpi;
+            mpich = mkPackages pkgs.mpich;
+            serial = mkPackages null;
+            default = serial;
           };
-
-          mumps-serial = pkgs.callPackage ./mumps {
-            src = inputs.mumps;
-            mpi = null;
-            inherit blas scalapack;
-          };
-
-          slepc = pkgs.callPackage ./slepc {
-            src = inputs.slepc;
-            inherit mpi petsc blas;
-          };
-
-          sowing = pkgs.callPackage ./sowing {
-            src = inputs.sowing;
-          };
-
-          scalapack = pkgs.scalapack.override { inherit mpi; };
-
-          hypre = pkgs.callPackage ./hypre {
-            src = inputs.hypre;
-            inherit mpi;
-          };
-
-          petsc = pkgs.callPackage ./petsc {
-            src = inputs.petsc;
-            version = "3.18.3";
-            inherit mumps sowing mpi blas hypre;
-            inherit (pkgs.python3Packages) numpy cython;
-          };
-
-          default = petsc;
-        };
       }
     );
 }

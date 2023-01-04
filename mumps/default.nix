@@ -4,17 +4,21 @@
 }:
 
 let
-  withMpi = mpi != null;
+  mpiSupport = mpi != null;
 in
 stdenv.mkDerivation {
   name = "mumps";
   inherit src;
 
   nativeBuildInputs = [ gfortran ];
-  propagatedBuildInputs = [ mpi metis blas scalapack ];
+  propagatedBuildInputs =
+    [ metis blas ] ++
+    lib.optionals mpiSupport [
+      mpi scalapack
+    ];
 
   MAKE_INC = 
-    (if withMpi then ''
+    (if !mpiSupport then ''
       CC = gcc
       FC = gfortran
       FL = gfortran
@@ -63,7 +67,7 @@ stdenv.mkDerivation {
     OPTC    = -O -fopenmp
      
   '' +
-  (if withMpi then ''
+  (if !mpiSupport then ''
      LIBSEQNEEDED = libseqneeded
      INCS = $(INCSEQ)
      LIBS = $(LIBSEQ)
@@ -82,7 +86,7 @@ stdenv.mkDerivation {
     mkdir -p $out/lib
     cp lib/*.a $out/lib
     cp -r include $out/include
-  '' + lib.optionalString withMpi ''
+  '' + lib.optionalString (!mpiSupport) ''
     cp libseq/libmpiseq.a $out/lib
   '';
 }

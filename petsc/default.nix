@@ -9,7 +9,9 @@
 let
   mpiSupport = mpi != null;
   mumpsSupport = mumps != null;
+  hypreSupport = hypre != null;
 in
+assert hypreSupport -> mpiSupport;
 stdenv.mkDerivation rec {
   name = "petsc";
   inherit version src;
@@ -50,6 +52,9 @@ stdenv.mkDerivation rec {
     ] ++ lib.optionals (mumpsSupport && mpiSupport) [
       "--with-scalapack"
       "--with-scalapack-dir=${scalapack}"
+    ] ++ lib.optionals hypreSupport [
+      "--with-hypre=1"
+      "--with-hypre-dir=${hypre}"
     ] ++ [
     "--with-fc=gfortran"
     "--with-openmp"
@@ -59,9 +64,6 @@ stdenv.mkDerivation rec {
 
     "--with-metis"
     "--with-metis-dir=${metis}"
-
-    "--with-hypre=1"
-    "--with-hypre-dir=${hypre}"
 
     "--with-petsc4py=1"
 

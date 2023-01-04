@@ -4,6 +4,7 @@
   mpi
 }:
 
+assert mpi != null;
 stdenv.mkDerivation {
   name = "hypre";
   inherit src;
