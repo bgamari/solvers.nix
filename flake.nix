@@ -68,13 +68,13 @@
                 inherit mpi;
               };
 
-              petsc = pkgs.callPackage ./petsc {
+              petsc = pkgs.python3Packages.toPythonModule (pkgs.callPackage ./petsc {
                 src = inputs.petsc;
                 version = "3.18.3";
                 inherit mumps sowing mpi blas;
                 hypre = if mpi == null then null else hypre;
                 inherit (pkgs.python3Packages) numpy cython;
-              };
+              });
             };
           in rec {
             openmpi = mkPackages pkgs.openmpi;
