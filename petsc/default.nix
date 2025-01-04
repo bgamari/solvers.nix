@@ -1,8 +1,8 @@
 { stdenv, lib,
   src, version,
-  pkgconfig, gfortran,
+  pkg-config, gfortran,
   blas, liblapack, mpi,
-  python3, numpy, cython,
+  python3, numpy, cython, python3Packages,
   metis, mumps, scotch, scalapack, sowing, hypre
 }:
 
@@ -17,7 +17,7 @@ stdenv.mkDerivation rec {
   inherit version src;
 
   nativeBuildInputs = [
-    pkgconfig python3 gfortran cython
+    pkg-config python3 gfortran cython python3Packages.setuptools
   ] ++ lib.optional mpiSupport mpi;
 
   buildInputs = [
@@ -45,7 +45,7 @@ stdenv.mkDerivation rec {
 
   configureScript = "python ./configure";
 
-  configureFlags = 
+  configureFlags =
     lib.optionals mumpsSupport [
       (if mpiSupport then "--with-mumps-parallel" else "--with-mumps-serial")
       "--with-mumps-dir=${mumps}"

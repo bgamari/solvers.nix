@@ -1,12 +1,15 @@
 {
   "nodes": {
     "flake-utils": {
+      "inputs": {
+        "systems": "systems"
+      },
       "locked": {
-        "lastModified": 1667395993,
-        "narHash": "sha256-nuEHfE/LcWyuSWnS8t12N1wc105Qtau+/OdUAjtQ0rA=",
+        "lastModified": 1731533236,
+        "narHash": "sha256-l0KFg5HjrsfsO/JpG+r7fRrqm12kzFHyUHqHCVpMMbI=",
         "owner": "numtide",
         "repo": "flake-utils",
-        "rev": "5aed5285a952e0b949eb3ba02c12fa4fcfef535f",
+        "rev": "11707dc2f618dd54ca8739b309ec4fc024de578b",
         "type": "github"
       },
       "original": {
@@ -18,11 +21,11 @@
     "hypre": {
       "flake": false,
       "locked": {
-        "lastModified": 1672657418,
-        "narHash": "sha256-zv/u2WqFND//mUQcf655CNeyCLtOfc3GBmjsPadkoNc=",
+        "lastModified": 1735925409,
+        "narHash": "sha256-MhWj1cBKIDUCf1mHCR/3ecoFgLjpWlLh5+MPDGf7OB8=",
         "owner": "hypre-space",
         "repo": "hypre",
-        "rev": "2b1dd32d108446247a8a15110e8d53228e654de9",
+        "rev": "6d01417697aa84d118eb1e1eb91315df42575be5",
         "type": "github"
       },
       "original": {
@@ -49,11 +52,11 @@
     },
     "nixpkgs": {
       "locked": {
-        "lastModified": 1673113343,
-        "narHash": "sha256-UClYrY6wvzOrWlK6/RAIWQTumM+XgpAbCgfjLoFVuxY=",
+        "lastModified": 1735960585,
+        "narHash": "sha256-JVpAUYZ/f0HZd5xJmOa3oZA5R8r4K5XNlapMoVOw5hg=",
         "owner": "nixos",
         "repo": "nixpkgs",
-        "rev": "716cab14032dde128e5ef08c3ba31066d7802e51",
+        "rev": "8cb0cd700b47bb7c6e61fd1946d9dee8d6ad02d8",
         "type": "github"
       },
       "original": {
@@ -65,17 +68,17 @@
     "petsc": {
       "flake": false,
       "locked": {
-        "lastModified": 1672453414,
-        "narHash": "sha256-ycrUgy8vppnA2bY/343/ePVg+r9zpVNSz+CbRm7IJxY=",
+        "lastModified": 1735935115,
+        "narHash": "sha256-ciset5IHPyoyEwQdPhuhuvNISGa7VbBUD1WPUP1/6+Y=",
         "ref": "refs/heads/main",
-        "rev": "5ea10fd3dce7171800b30dfb5bb4b8ea663d7506",
-        "revCount": 85515,
+        "rev": "3531e58460127287163dcc8e4132a2df525e39a6",
+        "revCount": 91231,
         "type": "git",
-        "url": "https://gitlab.com/petsc/petsc?tag=v3.18.3"
+        "url": "https://gitlab.com/petsc/petsc?tag=v3.22.2"
       },
       "original": {
         "type": "git",
-        "url": "https://gitlab.com/petsc/petsc?tag=v3.18.3"
+        "url": "https://gitlab.com/petsc/petsc?tag=v3.22.2"
       }
     },
     "root": {
@@ -92,33 +95,48 @@
     "slepc": {
       "flake": false,
       "locked": {
-        "lastModified": 1671969956,
-        "narHash": "sha256-5b8pRiUVJvoZ/TAKz1wmT10jM9j6ztq0oJrEytpL7I4=",
+        "lastModified": 1734448427,
+        "narHash": "sha256-DFyLbSpXVFQDOIt9fxh/YD+UIB2npzNjr3D8ovZKHEU=",
         "ref": "refs/heads/main",
-        "rev": "560709d219c6c9eefc2e3a6190bce54cf95b4120",
-        "revCount": 9550,
+        "rev": "616e8b6ac8dbb41a1dc314e5c099b8af246c688d",
+        "revCount": 10334,
         "type": "git",
-        "url": "https://gitlab.com/slepc/slepc?tag=v3.18.1"
+        "url": "https://gitlab.com/slepc/slepc?tag=v3.22.2"
       },
       "original": {
         "type": "git",
-        "url": "https://gitlab.com/slepc/slepc?tag=v3.18.1"
+        "url": "https://gitlab.com/slepc/slepc?tag=v3.22.2"
       }
     },
     "sowing": {
       "flake": false,
       "locked": {
-        "lastModified": 1670340991,
-        "narHash": "sha256-aQejrOsG1kfz2tgqEOhZHgpDz/zj8TlINjNwVL1H+rw=",
+        "lastModified": 1724430605,
+        "narHash": "sha256-PJX3+3c39qyKoHFoJRzzehhRS1VjbClmKZzdIZ/9WFc=",
         "ref": "refs/heads/master",
-        "rev": "72814215eeafbd74af5b0fb419722a5b567c42ef",
-        "revCount": 304,
+        "rev": "e5f48cf4a72ae089ec04f5fa8fe9d15da4506cef",
+        "revCount": 317,
         "type": "git",
-        "url": "https://bitbucket.com/petsc/pkg-sowing/v1.1.26-p6"
+        "url": "https://bitbucket.com/petsc/pkg-sowing/v1.1.26.12"
       },
       "original": {
         "type": "git",
-        "url": "https://bitbucket.com/petsc/pkg-sowing/v1.1.26-p6"
+        "url": "https://bitbucket.com/petsc/pkg-sowing/v1.1.26.12"
+      }
+    },
+    "systems": {
+      "locked": {
+        "lastModified": 1681028828,
+        "narHash": "sha256-Vy1rq5AaRuLzOxct8nz4T6wlgyUR7zLU309k9mBC768=",
+        "owner": "nix-systems",
+        "repo": "default",
+        "rev": "da67096a3b9bf56a91d16901293e51ba5b49a27e",
+        "type": "github"
+      },
+      "original": {
+        "owner": "nix-systems",
+        "repo": "default",
+        "type": "github"
       }
     }
   },

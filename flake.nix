@@ -6,17 +6,17 @@
   inputs.nixpkgs.url = "github:nixos/nixpkgs";
 
   inputs.petsc = {
-    url = "git+https://gitlab.com/petsc/petsc?tag=v3.18.3";
+    url = "git+https://gitlab.com/petsc/petsc?tag=v3.22.2";
     flake = false;
   };
 
   inputs.slepc = {
-    url = "git+https://gitlab.com/slepc/slepc?tag=v3.18.1";
+    url = "git+https://gitlab.com/slepc/slepc?tag=v3.22.2";
     flake = false;
   };
 
   inputs.sowing = {
-    url = "git+https://bitbucket.com/petsc/pkg-sowing/v1.1.26-p6";
+    url = "git+https://bitbucket.com/petsc/pkg-sowing/v1.1.26.12";
     flake = false;
   };
 
@@ -32,56 +32,62 @@
 
   outputs = inputs@{ self, nixpkgs, flake-utils, ... }:
     flake-utils.lib.eachDefaultSystem (system:
-      let pkgs = nixpkgs.legacyPackages.${system};
-      in {
-        packages = 
-          let
-            mkPackages = mpi: rec {
-              inherit mpi;
+      let
+        mkOverlay = mpi: self: super: {
+          inherit mpi;
 
-              blas = pkgs.openblasCompat;
+          #blas = self.openblas;
 
-              mumps = pkgs.callPackage ./mumps {
-                src = inputs.mumps;
-                inherit mpi blas scalapack;
-              };
-
-              mumps-serial = pkgs.callPackage ./mumps {
-                src = inputs.mumps;
-                mpi = null;
-                inherit blas scalapack;
-              };
-
-              slepc = pkgs.callPackage ./slepc {
-                src = inputs.slepc;
-                inherit mpi petsc blas;
-              };
-
-              sowing = pkgs.callPackage ./sowing {
-                src = inputs.sowing;
-              };
-
-              scalapack = pkgs.scalapack.override { inherit mpi; };
-
-              hypre = pkgs.callPackage ./hypre {
-                src = inputs.hypre;
-                inherit mpi;
-              };
-
-              petsc = pkgs.python3Packages.toPythonModule (pkgs.callPackage ./petsc {
-                src = inputs.petsc;
-                version = "3.18.3";
-                inherit mumps sowing mpi blas;
-                hypre = if mpi == null then null else hypre;
-                inherit (pkgs.python3Packages) numpy cython;
-              });
-            };
-          in rec {
-            openmpi = mkPackages pkgs.openmpi;
-            mpich = mkPackages pkgs.mpich;
-            serial = mkPackages null;
-            default = serial;
+          mumps = self.callPackage ./mumps {
+            src = inputs.mumps;
+            inherit (self) mpi blas scalapack;
           };
+
+          mumps-serial = self.callPackage ./mumps {
+            src = inputs.mumps;
+            mpi = null;
+            inherit (self) blas scalapack;
+          };
+
+          slepc = self.callPackage ./slepc {
+            src = inputs.slepc;
+            inherit (self) mpi petsc blas;
+          };
+
+          sowing = self.callPackage ./sowing {
+            src = inputs.sowing;
+          };
+
+          #scalapack = super.scalapack.override { inherit mpi; };
+
+          hypre = self.callPackage ./hypre {
+            src = inputs.hypre;
+            inherit mpi;
+          };
+
+          petsc = self.python3Packages.toPythonModule (self.callPackage ./petsc {
+            src = inputs.petsc;
+            version = "3.22.2";
+            inherit (self) mumps sowing mpi blas;
+            hypre = if self.mpi == null then null else self.hypre;
+            inherit (self.python3Packages) numpy cython;
+          });
+        };
+
+      in rec {
+        lib.mkOverlay = mkOverlay;
+
+        overlays.serial = self: super: mkOverlay null self super;
+        overlays.mpich = self: super: mkOverlay self.mpich self super;
+        overlays.openmpi = self: super: mkOverlay self.openmpi self super;
+        overlays.default = overlays.serial;
+
+        packages = rec {
+          openmpi = import nixpkgs { inherit system; overlays = [overlays.openmpi]; };
+          mpich   = import nixpkgs { inherit system; overlays = [overlays.mpich]; };
+          serial  = import nixpkgs { inherit system; overlays = [overlays.serial]; };
+          default = serial;
+        };
       }
     );
 }

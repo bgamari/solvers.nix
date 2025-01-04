@@ -1,6 +1,6 @@
 {
   stdenv, lib, src, gfortran,
-  mpi, metis, scotch, blas, scalapack
+  mpi, metis, scotch, blas, lapack, scalapack
 }:
 
 let
@@ -12,12 +12,12 @@ stdenv.mkDerivation {
 
   nativeBuildInputs = [ gfortran ];
   propagatedBuildInputs =
-    [ metis blas ] ++
+    [ metis blas lapack ] ++
     lib.optionals mpiSupport [
       mpi scalapack
     ];
 
-  MAKE_INC = 
+  MAKE_INC =
     (if !mpiSupport then ''
       CC = gcc
       FC = gfortran
@@ -44,10 +44,10 @@ stdenv.mkDerivation {
 
     PLAT    =
     LIBEXT  = .a
-    OUTC    = -o 
-    OUTF    = -o 
+    OUTC    = -o
+    OUTF    = -o
     RM = /bin/rm -f
-    AR = ar vr 
+    AR = ar vr # mind the trailing whitespace
     RANLIB = ranlib
     LAPACK = -llapack
     SCALAP  = -lscalapack
@@ -65,7 +65,7 @@ stdenv.mkDerivation {
     OPTF    = -O -fopenmp -fallow-argument-mismatch
     OPTL    = -O -fopenmp
     OPTC    = -O -fopenmp
-     
+
   '' +
   (if !mpiSupport then ''
      LIBSEQNEEDED = libseqneeded
