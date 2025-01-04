@@ -35,8 +35,6 @@
         mkOverlay = mpi: self: super: {
           inherit mpi;
 
-          #blas = self.openblas;
-
           mumps = self.callPackage ./mumps {
             src = inputs.mumps;
             inherit (self) mpi blas scalapack;
