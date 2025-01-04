@@ -31,7 +31,6 @@
   };
 
   outputs = inputs@{ self, nixpkgs, flake-utils, ... }:
-    flake-utils.lib.eachDefaultSystem (system:
       let
         mkOverlay = mpi: self: super: {
           inherit mpi;
@@ -77,18 +76,20 @@
       in rec {
         lib.mkOverlay = mkOverlay;
 
-        overlays.serial = self: super: mkOverlay null self super;
-        overlays.mpich = self: super: mkOverlay self.mpich self super;
-        overlays.openmpi = self: super: mkOverlay self.openmpi self super;
+        overlays.serial  = final: prev: mkOverlay null final prev;
+        overlays.mpich   = final: prev: mkOverlay final.mpich final prev;
+        overlays.openmpi = final: prev: mkOverlay final.openmpi final prev;
         overlays.default = overlays.serial;
 
-        packages = rec {
-          openmpi = import nixpkgs { inherit system; overlays = [overlays.openmpi]; };
-          mpich   = import nixpkgs { inherit system; overlays = [overlays.mpich]; };
-          serial  = import nixpkgs { inherit system; overlays = [overlays.serial]; };
+      } // (flake-utils.lib.eachDefaultSystem (system: {
+        packages.petsc = self.legacyPackages.${system}.openmpi.petsc;
+
+        legacyPackages = rec {
+          openmpi = import nixpkgs { inherit system; overlays = [self.overlays.openmpi]; };
+          mpich   = import nixpkgs { inherit system; overlays = [self.overlays.mpich]; };
+          serial  = import nixpkgs { inherit system; overlays = [self.overlays.serial]; };
           default = serial;
         };
-      }
-    );
+      }));
 }
 
